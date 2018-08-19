@@ -1,0 +1,27 @@
+{
+  "session": {
+    "new": false,
+    "sessionId": "session1234",
+    "attributes": {},
+    "user": {
+      "userId": "usr123"
+    },
+    "application": {
+      "applicationId": "amzn1.ask.skill.9132081b-4813-4273-8b77-1117a2d0b257"
+    }
+  },
+  "version": "1.0",
+  "request": {
+    "intent": {
+      "slots": {
+        "FirstName": {
+          "name": "FirstName",
+          "value": "John"
+        }
+      },
+      "name": "HelloIntent"
+    },
+    "type": "IntentRequest",
+    "requestId": "request5678"
+  }
+}
