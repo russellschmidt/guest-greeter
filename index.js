@@ -19,6 +19,7 @@ exports.handler = function(event, context) {
       if (request.intent.name === 'HelloIntent') {
         let name = request.intent.slots.FirstName.value;
         options.speechText = "Hello " + name + ". ";
+        options.speechText += "I think your name is spelled <say-as interpret-as='spell-out'>" + name + "</say-as>. ";
         options.speechText += getWish();
         getQuote(function(quote, err) {
           if (err) {
@@ -52,8 +53,8 @@ function buildResponse (options) {
     version: "1.0",
     response: {
       outputSpeech: {
-        type: "PlainText",
-        text: options.speechText
+        type: "SSML",
+        text: "<speak>" + options.speechText + "</speak>"
       },
       shouldEndSession: options.endSession
     }
@@ -62,8 +63,8 @@ function buildResponse (options) {
   if (options.repromptText) {
     response.response.reprompt = {
       outputSpeech: {
-        type: "PlainText",
-        text: options.repromptText
+        type: "SSML",
+        text: "<speak>" + options.repromptText + "</speak>"
       }
     }
   };
