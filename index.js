@@ -106,6 +106,7 @@ function handleNextQuoteIntent(request, context, session) {
   } else {
     options.speechText = " Wrong invocation of this intent. ";
     options.endSession = true;
+    context.succeed(buildResponse(options));
   }
     
 
