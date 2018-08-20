@@ -22,13 +22,18 @@ exports.handler = function(event, context) {
         handleHelloIntent(request, context)
       } else if (request.intent.name === 'QuoteIntent') {
         handleQuoteIntent(request, context, session);
-      } else if (request.intent.name === 'NextQuoteIntent')
+      } else if (request.intent.name === 'NextQuoteIntent') {
         handleNextQuoteIntent(request, context, session);
+      } else if (request.intent.name === 'AMAZON.StopIntent' || request.intent.name === 'AMAZON.CancelIntent') {
+        context.succeed(buildResponse({
+          speechText: "Good bye. ",
+          endSession: true
+        }));
       } else {
         throw "Unknown intent";
       }
     } else if (request.type === 'SessionEndedRequest') {
-  
+
     } else {
       throw "Unknown intent type";
     }
