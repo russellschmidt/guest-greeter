@@ -11,8 +11,6 @@ exports.handler = function(event, context) {
     if (!event.session.attributes) {
       event.session.attributes = {};
     }
-
-
   
     if (request.type === 'LaunchRequest') {
       handleLaunchIntent(context);
