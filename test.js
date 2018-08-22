@@ -110,6 +110,7 @@ describe('All intents', function() {
        });
      });
 
+     // check for initial speech and reprompt - just check a unique start to see if its playing.
      //it('valid outputSpeech', function() {
      //  expect(ctx.speechResponse.response.outputSpeech.ssml).to.match(/<speak>Hi,.*<\/speak>/);
      //});
@@ -118,40 +119,162 @@ describe('All intents', function() {
      //  expect(ctx.speechResponse.response.reprompt.outputSpeech.ssml).to.match(/<speak>For example.*<\/speak>/);
      //});
 
-  });
-
-    describe(`Test TBDIntentName`, function() {
-
-        before(function(done) {
-          event.request.intent = {};
-          event.session.attributes = {};
-          event.request.type = 'IntentRequest';
-          event.request.intent.name = 'TBDIntentName';
-          event.request.intent.slots = {
-            TBDSlotName: {
-              name: 'TBDSlotName',
-              value: 'TBDValue'
-            }
-          };
-          ctx.done = done;
-          lambdaToTest.handler(event , ctx);
-        });
-
-       it('valid response', function() {
-         validRsp(ctx, {
-           endSession: TBD
-         });
-       });
-
-       //it('valid outputSpeech', function() {
-       //  expect(ctx.speechResponse.response.outputSpeech.ssml).to.match(/<speak>Hi,.*<\/speak>/);
-       //});
-    
-       //it('valid repromptSpeech', function() {
-       //  expect(ctx.speechResponse.response.reprompt.outputSpeech.ssml).to.match(/<speak>For example.*<\/speak>/);
-       //});
-
+    it('valid outputSpeech', function() {
+      expect(ctx.speechResponse.response.outputSpeech.ssml).to.match(/<speak>Welcome to Uncle*<\/speak>/);
     });
 
+    it('valid repromptSpeech', function() {
+      expect(ctx.speechResponse.response.reprompt.outputSpeech.ssml).to.match(/<speak>Whom do you care to greet*<\/speak>/);
+    });
 
+  });
+  // 
+  describe(`Test HelloIntent`, function() {
+
+    before(function(done) {
+      event.request.intent = {};
+      event.session.attributes = {};
+      event.request.type = 'IntentRequest';
+      event.request.intent.name = 'HelloIntent';
+      event.request.intent.slots = {
+        FirstName: {
+          name: 'FirstName',
+          value: 'John'
+        }
+      };
+      ctx.done = done;
+      lambdaToTest.handler(event , ctx);
+    });
+
+   it('valid response', function() {
+     validRsp(ctx, {
+       endSession: false
+     });
+   });
+
+   it('valid outputSpeech', function() {
+    expect(ctx.speechResponse.response.outputSpeech.ssml).to.match(/<speak>Hello .*John<\/speak>/);
+   });
+
+   it('valid repromptSpeech', function() {
+    expect(ctx.speechResponse.response.reprompt.outputSpeech.ssml).to.match(/<speak>For example.*<\/speak>/);
+   });
+
+  });
+
+    // 
+    describe(`Test QuoteIntent`, function() {
+
+      before(function(done) {
+        event.request.intent = {};
+        event.session.attributes = {};
+        event.request.type = 'IntentRequest';
+        event.request.intent.name = 'QuoteIntent';
+        event.request.intent.slots = {};       };
+        ctx.done = done;
+        lambdaToTest.handler(event , ctx);
+      });
+  
+     it('valid response', function() {
+       validRsp(ctx, {
+         endSession: false
+       });
+     });
+  
+     it('valid outputSpeech', function() {
+      expect(ctx.speechResponse.response.outputSpeech.ssml).to.match(/one more quote/);
+     });
+  
+     it('valid repromptSpeech', function() {
+      expect(ctx.speechResponse.response.reprompt.outputSpeech.ssml).to.match(/can say yes/);
+     });
+  
+    });
+
+  // 
+  describe(`Test NextQuoteIntent correct invocation`, function() {
+
+    before(function(done) {
+      event.request.intent = {};
+      event.session.attributes = ctx.speechResponse.sessionAttributes;
+      event.request.type = 'IntentRequest';
+      event.request.intent.name = 'NextQuoteIntent';
+      event.request.intent.slots = {};
+      ctx.done = done;
+      lambdaToTest.handler(event , ctx);
+    });
+
+   it('valid response', function() {
+     validRsp(ctx, {
+       endSession: false
+     });
+   });
+
+   it('valid outputSpeech', function() {
+    expect(ctx.speechResponse.response.outputSpeech.ssml).to.match(/one more quote/);
+   });
+
+   it('valid repromptSpeech', function() {
+    expect(ctx.speechResponse.response.reprompt.outputSpeech.ssml).to.match(/can say yes/);
+   });
+
+  });
+
+    // 
+    describe(`Test NextQuoteIntent incorrect invocation`, function() {
+
+      before(function(done) {
+        event.request.intent = {};
+        event.session.attributes = ctx.speechResponse.sessionAttributes;
+        event.request.type = 'IntentRequest';
+        event.request.intent.name = 'NextQuoteIntent';
+        event.request.intent.slots = {};
+        ctx.done = done;
+        lambdaToTest.handler(event , ctx);
+      });
+  
+     it('valid response', function() {
+       validRsp(ctx, {
+         endSession: true
+       });
+     });
+  
+     it('valid outputSpeech', function() {
+      expect(ctx.speechResponse.response.outputSpeech.ssml).to.match(/Wrong invocation/);
+     });
+  
+    //  it('valid repromptSpeech', function() {
+    //   expect(ctx.speechResponse.response.reprompt.outputSpeech.ssml).to.match(/can say yes/);
+    //  });
+  
+    });
+
+    // 
+    describe(`Test AMAZON.StopIntent`, function() {
+
+      before(function(done) {
+        event.request.intent = {};
+        event.session.attributes ={};
+        event.request.type = 'IntentRequest';
+        event.request.intent.name = 'AMAZON.StopIntent';
+        event.request.intent.slots = {};
+        ctx.done = done;
+        lambdaToTest.handler(event , ctx);
+      });
+  
+     it('valid response', function() {
+       validRsp(ctx, {
+         endSession: true
+       });
+     });
+  
+     it('valid outputSpeech', function() {
+      expect(ctx.speechResponse.response.outputSpeech.ssml).to.match(/Good bye/);
+     });
+  
+    //  it('valid repromptSpeech', function() {
+    //   expect(ctx.speechResponse.response.reprompt.outputSpeech.ssml).to.match(/can say yes/);
+    //  });
+  
+    });
 });
