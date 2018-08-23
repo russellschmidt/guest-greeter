@@ -28,8 +28,8 @@ def alexa():
 def handle_launch_request():
 	'Handles launch request and generates response'
 	res = Response()
-	res.speechText = 'Welcome to Uncle Rusty\'s Greeting Skill. Using this skill you can greet your guests and amaze them. For example, you can say, say hello to John. '
-	res.repromptText = 'Whom do you care to greet? You can say, for example, say hello to John. '
+	res.speech_text = 'Welcome to Uncle Rusty\'s Greeting Skill. Using this skill you can greet your guests and amaze them. For example, you can say, say hello to John. '
+	res.reprompt_text = 'Whom do you care to greet? You can say, for example, say hello to John. '
 	res.end_session = False
 	return res.build_response()
 
