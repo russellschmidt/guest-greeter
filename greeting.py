@@ -37,7 +37,7 @@ def handle_hello_intent(req):
 	'Handles Hello intent request and generates a response'
 	name = req['intent']['slots']['FirstName']['value']
 	res = Response()
-	res.speech_text = 'I think your {0} is spelled <say-as interpret-as="spell-out">{0}</say-as>. '.format(name)
+	res.speech_text = 'I think your name {0} is spelled <say-as interpret-as="spell-out">{0}</say-as>. '.format(name)
 	res.speech_text += get_wish()
 	return res.build_response()
 
@@ -53,7 +53,6 @@ def get_wish():
 		return 'Good afternoon. '
 	else:
 		return 'Good evening. '
-	
 
 class Response(object):
 	'Alexa skill response object with helper functions'
@@ -78,7 +77,7 @@ class Response(object):
 		}
 
 		if self.reprompt_text:
-			fnl_response['response']['reprompt_text'] = {
+			fnl_response['response']['reprompt'] = {
 				'outputSpeech' : {
 					'type' : 'SSML',
 					'ssml' : '<speak>' + self.reprompt_text + '</speak>'

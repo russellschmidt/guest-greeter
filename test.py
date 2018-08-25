@@ -1,5 +1,5 @@
 #import greeting 
-import greeting_ask as greeting
+import greeting
 import unittest
 import json
 
@@ -15,7 +15,7 @@ class GreetingTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def get_repsonse(self,jdata):
+    def get_response(self,jdata):
         r=self.app.post('/alexa_end_point', data=json.dumps(jdata), content_type='application/json')
         response = json.loads(r.data)
         return response
@@ -24,22 +24,22 @@ class GreetingTestCase(unittest.TestCase):
         jdata = self.jdata.copy()
         jdata['request']['type'] = 'LaunchRequest'
         jdata['request']['intent'] = {}
-        response = self.get_repsonse(jdata)
+        response = self.get_response(jdata)
         self.check_valid_response(response,end_session=False)
         self.assertRegexpMatches(response['response']['outputSpeech']['ssml'],r'<speak>Welcome.*</speak>', 'Output speech text check')
 
     def test_01_hello_intent(self):
         jdata = self.jdata.copy()
-        response = self.get_repsonse(jdata)
+        response = self.get_response(jdata)
         self.check_valid_response(response,end_session=True)
-        self.assertRegexpMatches(response['response']['outputSpeech']['ssml'],r'<speak>Hello.*</speak>', 'Output speech text check')
+        self.assertRegexpMatches(response['response']['outputSpeech']['ssml'],r'<speak>I think your.*</speak>', 'Output speech text check')
 
     def test_02_quote_intent(self):
         jdata = self.jdata.copy()
         jdata['request']['intent']['name'] = 'QuoteIntent'
         jdata['request']['intent']['slots'] = {}
 
-        response = self.get_repsonse(jdata)
+        response = self.get_response(jdata)
         self.check_valid_response(response,end_session=False)
         GreetingTestCase.prev_response = response
         self.assertRegexpMatches(response['response']['outputSpeech']['ssml'],r'Do you.*', 'Output speech text check')
@@ -51,12 +51,12 @@ class GreetingTestCase(unittest.TestCase):
         jdata['request']['intent']['slots'] = {}
         jdata['session']['attributes'] = GreetingTestCase.prev_response['sessionAttributes']
 
-        response = self.get_repsonse(jdata)
+        response = self.get_response(jdata)
         self.check_valid_response(response,end_session=False)
         self.assertRegexpMatches(response['response']['reprompt']['outputSpeech']['ssml'],r'^<speak> You can say.*</speak>', 'reprompt text valid')
 
         jdata['session']['attributes'] = {}
-        response = self.get_repsonse(jdata)
+        response = self.get_response(jdata)
         self.check_valid_response(response,end_session=True)
         self.assertRegexpMatches(response['response']['outputSpeech']['ssml'],r'^<speak>Wrong.*</speak>', 'Output speech text check')
 
@@ -65,7 +65,7 @@ class GreetingTestCase(unittest.TestCase):
         jdata['request']['intent']['name'] = 'AMAZON.StopIntent'
         jdata['request']['intent']['slots'] = {}
 
-        response = self.get_repsonse(jdata)
+        response = self.get_response(jdata)
         self.check_valid_response(response,end_session=True)
         self.assertRegexpMatches(response['response']['outputSpeech']['ssml'],r'^<speak>Good Bye.</speak>', 'speech text check')
 
